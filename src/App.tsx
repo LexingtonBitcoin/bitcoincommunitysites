@@ -40,8 +40,7 @@ const defaultConfig: AppConfig = {
 // Create preset relays including configured ones
 const configuredRelays = siteConfig.defaultRelays.map(url => {
   const domain = url.replace(/^wss?:\/\//, '');
-  const name = domain === 'relay.nostr.band' ? 'Nostr.Band' :
-              domain === 'relay.damus.io' ? 'Damus' :
+  const name = domain === 'relay.damus.io' ? 'Damus' :
               domain === 'relay.primal.net' ? 'Primal' :
               domain === 'relay.chorus.community' ? 'Chorus' :
               domain === 'relay.lexingtonbitcoin.org' ? 'Lexington Bitcoin' :

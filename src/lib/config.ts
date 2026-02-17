@@ -37,7 +37,6 @@ export interface SiteConfig {
 
 // Default relays if none specified
 const DEFAULT_RELAYS = [
-  'wss://relay.nostr.band',
   'wss://relay.damus.io',
   'wss://relay.primal.net',
   'wss://relay.chorus.community'

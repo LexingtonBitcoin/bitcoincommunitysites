@@ -782,7 +782,7 @@ The project includes an `AppProvider` that manages global application state incl
 ```typescript
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: "wss://relay.nostr.band",
+  relayUrl: "wss://relay.damus.io",
 };
 ```
 

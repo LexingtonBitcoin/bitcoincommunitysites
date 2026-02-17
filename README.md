@@ -162,7 +162,7 @@ VITE_FEATURE_BOX_3_DESCRIPTION=Reserve your spot at our next event
 #### Relay Configuration
 ```bash
 # Override default relays (comma-separated)
-VITE_DEFAULT_RELAYS=wss://relay.damus.io,wss://relay.nostr.band
+VITE_DEFAULT_RELAYS=wss://relay.damus.io,wss://relay.primal.net
 ```
 
 ## 🏗️ Project Structure
@@ -255,8 +255,8 @@ This project implements several Nostr Improvement Proposals (NIPs) with full com
 
 The application connects to multiple Nostr relays by default:
 - `relay.damus.io` - General purpose relay
-- `relay.nostr.band` - Content aggregation relay  
 - `relay.primal.net` - Popular client relay
+- `relay.chorus.community` - Community relay
 
 Users can customize relay configuration via environment variables.
 

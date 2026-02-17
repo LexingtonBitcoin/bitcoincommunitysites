@@ -23,6 +23,13 @@ export interface SiteConfig {
   enableRsvp: boolean;
   enableSocial: boolean;
   enableDonationPage: boolean;
+  enableBusiness: boolean;
+
+  // Business / Map location
+  locationZip?: string;
+  locationCountry: string;
+  locationLat?: number;
+  locationLon?: number;
   
   // Feature box content
   featureBoxes: {
@@ -102,6 +109,11 @@ export function loadSiteConfig(): SiteConfig {
     enableRsvp: parseBoolean(import.meta.env.VITE_ENABLE_RSVP, true),
     enableSocial: parseBoolean(import.meta.env.VITE_ENABLE_SOCIAL, false),
     enableDonationPage: parseBoolean(import.meta.env.VITE_ENABLE_DONATION_PAGE, false),
+    enableBusiness: parseBoolean(import.meta.env.VITE_ENABLE_BUSINESS, false),
+    locationZip: import.meta.env.VITE_LOCATION_ZIP || undefined,
+    locationCountry: import.meta.env.VITE_LOCATION_COUNTRY || 'US',
+    locationLat: import.meta.env.VITE_LOCATION_LAT ? parseFloat(import.meta.env.VITE_LOCATION_LAT) : undefined,
+    locationLon: import.meta.env.VITE_LOCATION_LON ? parseFloat(import.meta.env.VITE_LOCATION_LON) : undefined,
     featureBoxes: {
       box1: {
         title: import.meta.env.VITE_FEATURE_BOX_1_TITLE || 'Events',

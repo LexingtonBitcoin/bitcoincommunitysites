@@ -40,13 +40,19 @@ export function Navigation() {
     navItems.push({ path: '/donate', label: 'Donate', enabled: true });
   }
 
+  // Business comes after Donate
+  if (siteConfig.enableBusiness) {
+    navItems.push({ path: '/business', label: 'Business', enabled: true });
+  }
+
   // Community comes last (only for signed-in users when community is configured)
   if (user && siteConfig.communityId) {
     navItems.push({ path: '/community', label: 'Community', enabled: true });
   }
 
   const isActive = (path: string) => {
-    return location.pathname === path;
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
   };
 
   return (

@@ -3,6 +3,7 @@ import { NostrEvent, NPool, NRelay1 } from '@nostrify/nostrify';
 import { NostrContext } from '@nostrify/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAppContext } from '@/hooks/useAppContext';
+import type { RelayMetadata } from '@/contexts/AppContext';
 
 interface NostrProviderProps {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface NostrProviderProps {
 
 const NostrProvider: React.FC<NostrProviderProps> = (props) => {
   const { children } = props;
-  const { config, presetRelays } = useAppContext();
+  const { config } = useAppContext();
 
   const queryClient = useQueryClient();
 
@@ -18,13 +19,13 @@ const NostrProvider: React.FC<NostrProviderProps> = (props) => {
   const pool = useRef<NPool | undefined>(undefined);
 
   // Use refs so the pool always has the latest data
-  const relayUrl = useRef<string>(config.relayUrl);
+  const relayMetadata = useRef<RelayMetadata>(config.relayMetadata);
 
   // Update refs when config changes
   useEffect(() => {
-    relayUrl.current = config.relayUrl;
-    queryClient.resetQueries();
-  }, [config.relayUrl, queryClient]);
+    relayMetadata.current = config.relayMetadata;
+    queryClient.invalidateQueries({ queryKey: ['nostr'] });
+  }, [config.relayMetadata, queryClient]);
 
   // Initialize NPool only once
   if (!pool.current) {
@@ -33,22 +34,26 @@ const NostrProvider: React.FC<NostrProviderProps> = (props) => {
         return new NRelay1(url);
       },
       reqRouter(filters) {
-        return new Map([[relayUrl.current, filters]]);
+        const readRelays = relayMetadata.current.relays
+          .filter((r) => r.read)
+          .map((r) => r.url);
+
+        // Fall back to all relays if none are marked as read
+        const targets = readRelays.length > 0
+          ? readRelays
+          : relayMetadata.current.relays.map((r) => r.url);
+
+        return new Map(targets.map((url) => [url, filters]));
       },
       eventRouter(_event: NostrEvent) {
-        // Publish to the selected relay
-        const allRelays = new Set<string>([relayUrl.current]);
+        const writeRelays = relayMetadata.current.relays
+          .filter((r) => r.write)
+          .map((r) => r.url);
 
-        // Also publish to the preset relays, capped to 5
-        for (const { url } of (presetRelays ?? [])) {
-          allRelays.add(url);
-
-          if (allRelays.size >= 5) {
-            break;
-          }
-        }
-
-        return [...allRelays];
+        // Fall back to all relays if none are marked as write
+        return writeRelays.length > 0
+          ? writeRelays
+          : relayMetadata.current.relays.map((r) => r.url);
       },
     });
   }

@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
-import { RelaySelector } from '@/components/RelaySelector';
+import { RelayListManager } from '@/components/RelayListManager';
 import { WalletModal } from '@/components/WalletModal';
 import { EditProfileDialog } from './EditProfileDialog';
 import { useLoggedInAccounts, type Account } from '@/hooks/useLoggedInAccounts';
@@ -46,8 +46,8 @@ export function AccountSwitcher({ onAddAccountClick }: AccountSwitcherProps) {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56 p-2 animate-scale-in'>
-        <div className='font-medium text-sm px-2 py-1.5'>Switch Relay</div>
-        <RelaySelector className="w-full" />
+        <div className='font-medium text-sm px-2 py-1.5'>Relays</div>
+        <RelayListManager />
         <DropdownMenuSeparator />
         <div className='font-medium text-sm px-2 py-1.5'>Switch Account</div>
         {otherUsers.map((user) => (

@@ -251,14 +251,14 @@ This project implements several Nostr Improvement Proposals (NIPs) with full com
   - **Kind 4553**: Leave request events
   - **Kind 1111**: NIP-22 compliant threaded community discussions
 
-### Relay Usage
+### Relay Architecture
 
-The application connects to multiple Nostr relays by default:
+The application uses a NIP-65 multi-relay architecture with per-relay read/write permissions:
 - `relay.damus.io` - General purpose relay
 - `relay.primal.net` - Popular client relay
 - `relay.chorus.community` - Community relay
 
-Users can customize relay configuration via environment variables.
+On login, the app syncs the user's NIP-65 relay list (kind 10002) from the network. Users can manage relays with per-relay read/write toggles via the RelayListManager UI. Relay configuration can also be set via environment variables.
 
 ## 🚀 Deployment
 

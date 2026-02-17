@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNWC } from '@/hooks/useNWCContext';
-import type { WebLNProvider } from 'webln';
-import { requestProvider } from 'webln';
+import type { WebLNProvider } from '@webbtc/webln-types';
 
 export interface WalletStatus {
   hasWebLN: boolean;
@@ -27,15 +26,13 @@ export function useWallet() {
 
     setIsDetecting(true);
     try {
-      const provider = await requestProvider();
+      const provider = (window as unknown as { webln?: WebLNProvider }).webln;
+      if (!provider) throw new Error('no WebLN provider');
+      await provider.enable();
       setWebln(provider);
       setHasAttemptedDetection(true);
       return provider;
-    } catch (error) {
-      // Only log the error if it's not the common "no provider" error
-      if (error instanceof Error && !error.message.includes('no WebLN provider')) {
-        console.warn('WebLN detection error:', error);
-      }
+    } catch {
       setWebln(null);
       setHasAttemptedDetection(true);
       return null;

@@ -7,7 +7,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useCommunity } from '@/hooks/useCommunity';
 import { isModerator } from '@/lib/community';
 import { CommunityPost } from './CommunityPost';
-import { RelaySelector } from '@/components/RelaySelector';
+import { RelayListManager } from '@/components/RelayListManager';
 import { useOptimisticCommunity, type OptimisticPost } from '@/hooks/useOptimisticCommunity';
 
 interface CommunityFeedProps {
@@ -143,7 +143,7 @@ export function CommunityFeed({ communityId }: CommunityFeedProps) {
                 <p className="text-xs text-muted-foreground">
                   Try switching to a different relay to discover more content:
                 </p>
-                <RelaySelector className="w-full" />
+                <RelayListManager />
               </div>
             </div>
           </CardContent>

@@ -6,8 +6,8 @@ import { createHead, UnheadProvider } from '@unhead/react/client';
 import { InferSeoMetaPlugin } from '@unhead/addons';
 import { Suspense } from 'react';
 import NostrProvider from '@/components/NostrProvider';
+import { NostrSync } from '@/components/NostrSync';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NostrLoginProvider } from '@nostrify/react/login';
 import { AppProvider } from '@/components/AppProvider';
@@ -34,37 +34,27 @@ const queryClient = new QueryClient({
 
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: siteConfig.defaultRelays[0], // Use first configured relay as default
+  relayMetadata: {
+    relays: siteConfig.defaultRelays.map((url) => ({
+      url,
+      read: true,
+      write: true,
+    })),
+    updatedAt: 0,
+  },
 };
-
-// Create preset relays including configured ones
-const configuredRelays = siteConfig.defaultRelays.map(url => {
-  const domain = url.replace(/^wss?:\/\//, '');
-  const name = domain === 'relay.damus.io' ? 'Damus' :
-              domain === 'relay.primal.net' ? 'Primal' :
-              domain === 'relay.chorus.community' ? 'Chorus' :
-              domain === 'relay.lexingtonbitcoin.org' ? 'Lexington Bitcoin' :
-              domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
-  return { url, name };
-});
-
-const fallbackRelays = [
-  { url: 'wss://ditto.pub/relay', name: 'Ditto' },
-];
-
-const presetRelays = [...configuredRelays, ...fallbackRelays];
 
 export function App() {
   return (
     <UnheadProvider head={head}>
-      <AppProvider storageKey="nostr:app-config" defaultConfig={defaultConfig} presetRelays={presetRelays}>
+      <AppProvider storageKey="nostr:app-config" defaultConfig={defaultConfig}>
         <QueryClientProvider client={queryClient}>
           <NostrLoginProvider storageKey='nostr:login'>
             <NostrProvider>
+              <NostrSync />
               <NWCProvider>
                 <TooltipProvider>
                   <Toaster />
-                  <Sonner />
                   <Suspense>
                     <AppRouter />
                   </Suspense>

@@ -23,7 +23,10 @@ export function TestApp({ children }: TestAppProps) {
 
   const defaultConfig: AppConfig = {
     theme: 'light',
-    relayUrl: 'wss://relay.damus.io',
+    relayMetadata: {
+      relays: [{ url: 'wss://relay.damus.io', read: true, write: true }],
+      updatedAt: 0,
+    },
   };
 
   return (

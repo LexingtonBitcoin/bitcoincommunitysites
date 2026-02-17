@@ -86,7 +86,6 @@ The project uses shadcn/ui components located in `@/components/ui`. These are un
 - **Sidebar**: Navigation sidebar component
 - **Skeleton**: Loading placeholder
 - **Slider**: Input for selecting a value from a range
-- **Sonner**: Toast notification manager
 - **Switch**: Toggle switch control
 - **Table**: Data table with headers and rows
 - **Tabs**: Tabbed interface component
@@ -777,16 +776,28 @@ The comments system also supports commenting on external URLs, making it useful 
 
 ## App Configuration
 
-The project includes an `AppProvider` that manages global application state including theme and relay configuration. The default configuration includes:
+The project includes an `AppProvider` that manages global application state including theme and relay configuration. The app uses a NIP-65 multi-relay architecture with per-relay read/write permissions:
 
 ```typescript
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: "wss://relay.damus.io",
+  relayMetadata: {
+    relays: [
+      { url: 'wss://relay.damus.io', read: true, write: true },
+      { url: 'wss://relay.primal.net', read: true, write: true },
+      { url: 'wss://relay.chorus.community', read: true, write: true },
+    ],
+    updatedAt: 0,
+  },
 };
 ```
 
-Preset relays are available including Ditto, Nostr.Band, Damus, and Primal. The app uses local storage to persist user preferences.
+Key components of the relay architecture:
+- **`NostrProvider`**: Routes REQ subscriptions to relays marked `read: true` and publishes events to relays marked `write: true`
+- **`NostrSync`**: On user login, queries kind 10002 (NIP-65 relay list) and syncs relay preferences from the network
+- **`RelayListManager`**: UI component for managing relays with per-relay read/write toggles; publishes kind 10002 events when logged in
+
+The app stores `Partial<AppConfig>` in localStorage (merged with defaults on read) and uses Zod v4 schemas for validation.
 
 ## Routing
 
@@ -840,10 +851,10 @@ The router includes automatic scroll-to-top functionality and a 404 NotFound pag
 
 ### Empty States and No Content Found
 
-When no content is found (empty search results, no data available, etc.), display a minimalist empty state with the `RelaySelector` component. This allows users to easily switch relays to discover content from different sources.
+When no content is found (empty search results, no data available, etc.), display a minimalist empty state with the `RelayListManager` component. This allows users to manage relays and discover content from different sources.
 
 ```tsx
-import { RelaySelector } from '@/components/RelaySelector';
+import { RelayListManager } from '@/components/RelayListManager';
 import { Card, CardContent } from '@/components/ui/card';
 
 // Empty state example
@@ -852,9 +863,9 @@ import { Card, CardContent } from '@/components/ui/card';
     <CardContent className="py-12 px-8 text-center">
       <div className="max-w-sm mx-auto space-y-6">
         <p className="text-muted-foreground">
-          No results found. Try another relay?
+          No results found. Try adding a different relay.
         </p>
-        <RelaySelector className="w-full" />
+        <RelayListManager />
       </div>
     </CardContent>
   </Card>

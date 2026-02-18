@@ -45,6 +45,11 @@ export function Navigation() {
     navItems.push({ path: '/business', label: 'Business', enabled: true });
   }
 
+  // Messages (only for signed-in users)
+  if (user) {
+    navItems.push({ path: '/messages', label: 'Messages', enabled: true });
+  }
+
   // Community comes last (only for signed-in users when community is configured)
   if (user && siteConfig.communityId) {
     navItems.push({ path: '/community', label: 'Community', enabled: true });

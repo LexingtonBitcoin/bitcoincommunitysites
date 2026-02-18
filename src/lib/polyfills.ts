@@ -1,9 +1,18 @@
 /**
+ * Buffer polyfill for browser environments.
+ * Required by Node.js libraries (bitcoinjs-lib, isomorphic-git) used in the browser.
+ */
+import { Buffer } from 'buffer';
+if (!globalThis.Buffer) {
+  globalThis.Buffer = Buffer;
+}
+
+/**
  * Polyfill for AbortSignal.any()
- * 
+ *
  * AbortSignal.any() creates an AbortSignal that will be aborted when any of the
  * provided signals are aborted. This is useful for combining multiple abort signals.
- * 
+ *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/any_static
  */
 

@@ -53,10 +53,9 @@ export function AppProvider(props: AppProviderProps) {
   }), [defaultConfig, storedConfig]);
 
   // Generic config updater with callback pattern
-  const updateConfig = (updater: (currentConfig: AppConfig) => AppConfig) => {
+  const updateConfig = (updater: (currentConfig: Partial<AppConfig>) => Partial<AppConfig>) => {
     setStoredConfig((current) => {
-      const merged: AppConfig = { ...defaultConfig, ...current };
-      return updater(merged);
+      return updater(current);
     });
   };
 

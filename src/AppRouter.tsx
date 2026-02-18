@@ -17,6 +17,7 @@ const Community = lazy(() => import("./pages/Community"));
 const Donate = lazy(() => import("./pages/Donate"));
 const Business = lazy(() => import("./pages/Business"));
 const BusinessMap = lazy(() => import("./pages/BusinessMap"));
+const Messages = lazy(() => import("./pages/Messages"));
 
 // Get base path from environment variable, default to /bitcoincommunitysites/
 const basePath = import.meta.env.VITE_BASE_PATH || '/bitcoincommunitysites/';
@@ -99,6 +100,12 @@ export function AppRouter() {
             } />
           </>
         )}
+
+        <Route path="/messages" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Messages />
+          </Suspense>
+        } />
 
         {/* NIP-19 route for npub1, note1, naddr1, nevent1, nprofile1 */}
         <Route path="/:nip19" element={<NIP19Page />} />

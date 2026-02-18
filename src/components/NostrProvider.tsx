@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { NostrEvent, NPool, NRelay1 } from '@nostrify/nostrify';
+import { NostrEvent, NostrFilter, NPool, NRelay1 } from '@nostrify/nostrify';
 import { NostrContext } from '@nostrify/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAppContext } from '@/hooks/useAppContext';
@@ -33,7 +33,8 @@ const NostrProvider: React.FC<NostrProviderProps> = (props) => {
       open(url: string) {
         return new NRelay1(url);
       },
-      reqRouter(filters) {
+      eoseTimeout: 200,
+      reqRouter(filters: NostrFilter[]) {
         const readRelays = relayMetadata.current.relays
           .filter((r) => r.read)
           .map((r) => r.url);

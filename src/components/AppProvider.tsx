@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { AppContext, type AppConfig, type AppContextType, type Theme } from '@/contexts/AppContext';
+import { AppContext, type AppConfig, type AppContextType, type RelayMetadata, type Theme } from '@/contexts/AppContext';
 
 interface AppProviderProps {
   children: ReactNode;
@@ -19,12 +19,12 @@ const RelayMetadataSchema = z.object({
     write: z.boolean(),
   })),
   updatedAt: z.number(),
-});
+}) satisfies z.ZodType<RelayMetadata>;
 
 const AppConfigSchema = z.object({
   theme: z.enum(['dark', 'light', 'system']),
   relayMetadata: RelayMetadataSchema,
-});
+}) satisfies z.ZodType<AppConfig>;
 
 export function AppProvider(props: AppProviderProps) {
   const {
